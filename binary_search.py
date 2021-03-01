@@ -26,7 +26,23 @@ def find_smallest_positive(xs):
     >>> find_smallest_positive([-3, -2, -1]) is None
     True
     '''
-
+    if xs == []:
+        return None
+    if xs[-1] <= 0:
+        return None
+        
+    def go(l, r):
+        if l == r:
+            return l
+        mid = (l + r) // 2
+        if xs[mid] > 0:
+            r = mid 
+        if xs [mid] < 0:
+            l = mid + 1
+        if xs[mid] == 0:
+            return mid + 1
+        return go(l, r)
+    return go(0, len(xs) - 1)    
 
 def count_repeats(xs, x):
     '''
@@ -52,6 +68,44 @@ def count_repeats(xs, x):
     >>> count_repeats([3, 2, 1], 4)
     0
     '''
+
+    if xs == []:
+        return 0
+    if xs[-1] > x:
+        return 0
+        
+    def high(l, r):
+        if r-l == 1:
+            return r
+        if xs[l] == x:
+            return l
+     
+        mid = (l + r) // 2
+        if xs[mid] < x:
+            r = mid 
+        if xs [mid] > x:
+            l = mid
+        if xs[mid] == x:
+            r = mid
+        return high(l, r)
+    
+    
+    def low(l, r):
+        if r-l == 1:
+            return r
+        if xs[r] == x:
+                return r + 1
+        mid = (l + r) // 2
+        if xs[mid] < x:
+            r = mid 
+        if xs [mid] > x:
+            l = mid
+        if xs[mid] == x:
+            l = mid
+        return low(l, r)
+        
+    
+    return low(0, len(xs) - 1) - high(0, len(xs) - 1)
 
 
 def argmin(f, lo, hi, epsilon=1e-3):
@@ -87,8 +141,17 @@ def argmin(f, lo, hi, epsilon=1e-3):
     >>> argmin(lambda x: (x-5)**2, -20, 0)
     -0.00016935087808430278
     '''
-
-
+    def go(lo, hi):
+        if abs(hi-lo) < epsilon:
+            return (lo+hi) /2
+        m1 = ((hi - lo) / 3) + lo
+        m2 = hi - ((hi - lo) / 3)
+        if abs(f(m1)) < abs(f(m2)):
+            hi = m2 
+        if abs(f(m2)) < abs(f(m1)):
+            lo = m1
+        return go(lo, hi)
+    return go(lo, hi)
 ################################################################################
 # the functions below are extra credit
 ################################################################################
